@@ -18,11 +18,7 @@ jobs:
       - name: Set up GitHub CLI
         run: |
           # Install GitHub CLI
-          $architecture = if ([System.Environment]::Is64BitOperatingSystem) { "amd64" } else { "386" }
-          $url = "https://github.com/cli/cli/releases/latest/download/gh_${architecture}.msi"
-          Invoke-WebRequest -Uri $url -OutFile "gh-cli.msi"
-          Start-Process -Wait -FilePath "msiexec.exe" -ArgumentList "/i gh-cli.msi /quiet"
-          Remove-Item "gh-cli.msi"
+          Install-Module -Name GitHubCLI -Scope CurrentUser -Force -Verbose
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
