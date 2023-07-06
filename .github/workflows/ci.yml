@@ -2,7 +2,7 @@ name: Dot-Net-Core
 on:
   push:
     branches:
-      - master
+      - main
   
 jobs:
   CI:
