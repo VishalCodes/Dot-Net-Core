@@ -15,10 +15,12 @@ jobs:
         with:
           msbuild-version: '16.0'
       # setup GH Cli
-      - name: Setup GH Cli
-        uses: actions/setup-gh@v1
-        with:
-          gh-version: 1.9.2
+      - name: Set up GitHub CLI
+        run: |
+          # Install GitHub CLI
+          Invoke-WebRequest -Uri "https://github.com/cli/cli/releases/latest/download/gh_$(Get-OSArchitecture).msi" -OutFile "gh-cli.msi"
+          Start-Process -Wait -FilePath "msiexec.exe" -ArgumentList "/i gh-cli.msi /quiet"
+          Remove-Item "gh-cli.msi"
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
