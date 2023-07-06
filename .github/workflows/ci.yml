@@ -18,7 +18,10 @@ jobs:
       - name: Set up GitHub CLI
         run: |
           # Install GitHub CLI
-          Install-Module -Name GitHubCLI -Scope CurrentUser -Force -Verbose
+          Invoke-WebRequest -Uri "https://github.com/cli/cli/releases/latest/download/gh_1.14.0_windows_amd64.zip" -OutFile "gh-cli.zip"
+          Expand-Archive -Path "gh-cli.zip" -DestinationPath "gh-cli"
+          $env:Path += ";$(Get-Location)\gh-cli"
+          gh --version
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
