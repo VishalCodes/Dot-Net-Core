@@ -15,12 +15,12 @@ jobs:
         with:
           msbuild-version: '16.0'
       # setup GH Cli
-      - name: Set up GitHub CLI
+      - name: Download MSI Package
         run: |
-          # Install GitHub CLI
-          Invoke-WebRequest -Uri "https://github.com/cli/cli/releases/latest/download/gh_1.14.0_windows_amd64.zip" -OutFile "gh-cli.zip"
-          Expand-Archive -Path "gh-cli.zip" -DestinationPath "gh-cli"
-          $env:Path += ";$(Get-Location)\gh-cli"
+          Invoke-WebRequest -Uri "https://github.com/cli/cli/releases/download/v2.31.0/gh_2.31.0_windows_386.msi" -OutFile "gh.msi"
+      - name: Install MSI Package
+        run: |
+          Start-Process -Wait -FilePath "msiexec.exe" -ArgumentList "/i gh.msi /quiet"
           gh --version
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
