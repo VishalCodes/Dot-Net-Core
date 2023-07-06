@@ -15,11 +15,9 @@ jobs:
         with:
           msbuild-version: '16.0'
       # setup GH Cli
-      - name: Download MSI Package
+      - name: Download and Install GitHub CLI
         run: |
           Invoke-WebRequest -Uri "https://github.com/cli/cli/releases/download/v2.31.0/gh_2.31.0_windows_386.msi" -OutFile "gh.msi"
-      - name: Install MSI Package
-        run: |
           Start-Process -Wait -FilePath "msiexec.exe" -ArgumentList "/i gh.msi /quiet"
           gh --version
       - name: Setup .NET Core
@@ -29,10 +27,14 @@ jobs:
       # Build the Code using MS Build
       - name: Build with MSBuild
         run: msbuild /p:Configuration=Release
-      # Publish the built code to github releases using github cli
-      - name: Package and publish the alpha version
+      - name: Package and publish to GitHub Releases
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          Compress-Archive -Path ".\" -DestinationPath ".\dot-net-code.zip"
-          gh release create "publish-V1" -t "v1" ".\dot-net-code.zip"
+          # Create a build folder and copy the necessary files
+          New-Item -ItemType Directory -Force -Path "build"
+          Copy-Item -Path "./bin/Release/**" -Destination "build"
+          # Compress the build folder
+          Compress-Archive -Path "build" -DestinationPath "dot-net-code.zip"
+          # Publish the release using GitHub CLI
+          gh release create "publish-V1" -t "v1" "dot-net-code.zip"
