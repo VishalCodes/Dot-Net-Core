@@ -23,13 +23,12 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.100
+          dotnet-version: 3.1.408
+          include-prerelease: true
+          include: web
       # Build the Code using MS Build
       - name: Build with MSBuild
-        run: msbuild /p:Configuration=Release
-      
-      - name: Build with MSBuild
-        run: msbuild /p:Configuration=Release
+        run: msbuild /p:Configuration=Release /t:restore,build /p:UseSharedCompilation=false
       
       - name: Package the code
         run: dotnet pack --configuration Release --output ./packages
