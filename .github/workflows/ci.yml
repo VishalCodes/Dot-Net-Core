@@ -13,16 +13,15 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.100
-      - name: Install dependencies
-        run: dotnet restore
-      - name: Build
-        run: dotnet build --configuration Release --no-restore
-      - name: Test
+      # Build the Code using MS Build
+      - name: Build with MSBuild
+        run: msbuild /p:Configuration=Release
+      # Run the Tests
+      - name: Test with dotnet test
         run: dotnet test --no-restore --verbosity normal
-      - name: Publish
-        run: dotnet publish --configuration Release --no-build --no-restore --output ./publish
-      - name: Upload artifact
-        uses: actions/upload-artifact@v1
+      # Publish the Code as an artifact to GitHub Releases
+      - name: Publish Artifact
+        uses: actions/upload-artifact@v2
         with:
-          name: publish
-          path: ./publish
+          name: Dot-Net-Core
+          path: bin\Release\netcoreapp3.1\publish\
